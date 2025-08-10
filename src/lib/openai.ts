@@ -186,3 +186,33 @@ export function extractInsights(userMessage: string, assistantResponse: string) 
   return insights
 }
 
+
+// RAG functionality
+export async function searchDocuments(query: string, documentChunks: any[]): Promise<string[]> {
+  // Simple text-based search for now
+  // In production, this would use vector embeddings
+  const queryLower = query.toLowerCase()
+  
+  const relevantChunks = documentChunks
+    .filter(chunk => chunk.content.toLowerCase().includes(queryLower))
+    .sort((a, b) => {
+      // Simple relevance scoring based on query term frequency
+      const aCount = (a.content.toLowerCase().match(new RegExp(queryLower, 'g')) || []).length
+      const bCount = (b.content.toLowerCase().match(new RegExp(queryLower, 'g')) || []).length
+      return bCount - aCount
+    })
+    .slice(0, 3)
+    .map(chunk => chunk.content)
+  
+  return relevantChunks
+}
+
+export function buildRAGContext(relevantChunks: string[]): string {
+  if (relevantChunks.length === 0) {
+    return ''
+  }
+  
+  return `\n\nRelevante Informationen aus hochgeladenen Dokumenten:
+${relevantChunks.map((chunk, index) => `${index + 1}. ${chunk}`).join('\n\n')}`
+}
+

@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
 import { createBrowserClient, createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -10,8 +9,9 @@ export const createClientComponentClient = () =>
   createBrowserClient(supabaseUrl, supabaseAnonKey)
 
 // Server-side Supabase client for Server Components
-export const createServerComponentClient = () => {
-  const cookieStore = cookies()
+export const createServerComponentClient = async () => {
+  const { cookies } = await import('next/headers')
+  const cookieStore = await cookies()
   
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
@@ -332,40 +332,63 @@ export interface Database {
         Row: {
           id: string
           user_id: string
-          file_id: string
-          chunk_index: number
-          title: string | null
+          filename: string
           content: string
-          content_length: number
-          page_number: number | null
-          embedding: number[] | null
-          metadata: any | null
+          chunk_count: number
+          file_size: number
+          file_type: string
           created_at: string
         }
         Insert: {
           id?: string
           user_id: string
-          file_id: string
-          chunk_index: number
-          title?: string | null
+          filename: string
           content: string
-          content_length: number
-          page_number?: number | null
-          embedding?: number[] | null
-          metadata?: any | null
+          chunk_count?: number
+          file_size: number
+          file_type: string
           created_at?: string
         }
         Update: {
           id?: string
           user_id?: string
-          file_id?: string
-          chunk_index?: number
-          title?: string | null
+          filename?: string
           content?: string
-          content_length?: number
-          page_number?: number | null
+          chunk_count?: number
+          file_size?: number
+          file_type?: string
+          created_at?: string
+        }
+      }
+      document_chunks: {
+        Row: {
+          id: string
+          document_id: string
+          user_id: string
+          content: string
+          chunk_index: number
+          token_count: number
+          embedding: number[] | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          document_id: string
+          user_id: string
+          content: string
+          chunk_index: number
+          token_count?: number
           embedding?: number[] | null
-          metadata?: any | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          document_id?: string
+          user_id?: string
+          content?: string
+          chunk_index?: number
+          token_count?: number
+          embedding?: number[] | null
           created_at?: string
         }
       }
