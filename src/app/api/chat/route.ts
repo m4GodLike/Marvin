@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createClient } from '@/utils/supabase/server'
 import OpenAI from 'openai'
 
 export const dynamic = 'force-dynamic'
@@ -30,18 +29,7 @@ Antworte immer hilfreich, einfühlsam und ermutigend. Halte deine Antworten prä
 
 export async function POST(request: NextRequest) {
   try {
-    const cookieStore = cookies()
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value
-          },
-        },
-      }
-    )
+    const supabase = createClient()
     
     // Check authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser()

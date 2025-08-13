@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { createClientComponentClient } from '@/lib/supabase'
+import { createClient } from '@/utils/supabase/client'
 import { ChatMessage, ChatSession, ApiResponse, ChatResponse } from '@/types'
 import { formatRelativeTime } from '@/lib/utils'
 import { Send, Menu, Settings, User, MessageCircle } from 'lucide-react'
@@ -14,7 +14,7 @@ export default function ChatPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const supabase = createClientComponentClient()
+  const supabase = createClient()
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
