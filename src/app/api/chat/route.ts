@@ -133,12 +133,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Update session last activity
-    await supabase
-      .from('sessions')
-      .update({ updated_at: new Date().toISOString() })
-      .eq('id', session_id)
-
     return NextResponse.json({
       success: true,
       data: {
