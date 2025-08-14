@@ -34,12 +34,11 @@ export default function ChatPage() {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
 
-      // Get the most recent active session
+      // Get the most recent session
       const { data: sessions } = await supabase
         .from('sessions')
         .select('*')
         .eq('user_id', user.id)
-        .eq('is_active', true)
         .order('started_at', { ascending: false })
         .limit(1)
 

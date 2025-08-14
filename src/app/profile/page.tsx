@@ -44,7 +44,6 @@ export default function ProfilePage() {
       .from('memories')
       .select('*')
       .eq('user_id', user.id)
-      .eq('is_active', true)
       .order('created_at', { ascending: false })
 
     if (error) {
@@ -113,7 +112,7 @@ export default function ProfilePage() {
 
     const { error } = await supabase
       .from('memories')
-      .update({ is_active: false })
+      .delete()
       .eq('id', memoryId)
 
     if (error) {

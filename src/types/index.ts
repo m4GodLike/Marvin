@@ -39,7 +39,6 @@ export interface ChatSession {
   message_count: number
   total_tokens: number
   session_type: 'chat' | 'onboarding' | 'assessment'
-  is_active: boolean
 }
 
 export interface ChatMessage {
